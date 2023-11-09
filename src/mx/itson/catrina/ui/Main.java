@@ -376,11 +376,11 @@ public class Main extends javax.swing.JFrame {
                 
                 
                 txtArchivo.setText(archivo.toString());
-                txtNombre.setText(cuenta.getCostumer().getName());
-                 modelo.addRow(new Object[] {"RFC: " + cuenta.getCostumer().getRfc()});
-                 modelo.addRow(new Object[] {cuenta.getCostumer().getAddress()});
-                 modelo.addRow(new Object[] {cuenta.getCostumer().getCity()});
-                 modelo.addRow(new Object[] {"C.P. " + cuenta.getCostumer().getZip_code()});
+                txtNombre.setText(cuenta.getCustomer().getName());
+                 modelo.addRow(new Object[] {"RFC: " + cuenta.getCustomer().getRfc()});
+                 modelo.addRow(new Object[] {cuenta.getCustomer().getAddress()});
+                 modelo.addRow(new Object[] {cuenta.getCustomer().getCity()});
+                 modelo.addRow(new Object[] {"C.P. " + cuenta.getCustomer().getZip_code()});
                  txtTipoCuenta.setText(cuenta.getProduct());
                  
                  modelo1.addRow(new Object[] {"CUENTA", String.format("%25s", cuenta.getAccount())}); //28
