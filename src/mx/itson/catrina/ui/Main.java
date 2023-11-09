@@ -342,19 +342,33 @@ public class Main extends javax.swing.JFrame {
     
     private void btnSeleccioneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccioneActionPerformed
         
+        
+        /**
+ * Acción ejecutada al hacer clic en el botón "Seleccionar".
+ * Abre un diálogo de selección de archivo, carga el contenido del archivo,
+ * realiza cálculos financieros y actualiza las tablas y campos de la interfaz
+ * gráfica con la información obtenida.
+ * 
+ * @param evt Evento de acción asociado al clic del botón.
+ */
+        
         try{
-           
+            
+           // Abre un diálogo de selección de archivo en el directorio del usuario.
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
             
+            // Si se selecciona un archivo, habilita el ComboBox de selección de mes.
             if(fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
                 
                 cboMes.setEnabled(true);
                 
+                // Obtiene el archivo seleccionado y su contenido.
                 File archivo = fileChooser.getSelectedFile();
                 byte archivoBytes[] = Files.readAllBytes(archivo.toPath());
                 String contenido = new String(archivoBytes, StandardCharsets.UTF_8);
                 
+                // Inicializa modelos de tablas y variables para cálculos financieros.
                     DefaultTableModel modelo = (DefaultTableModel) tblDatosCliente.getModel();
                     modelo.setRowCount(0);
                     DefaultTableModel modelo1 = (DefaultTableModel) tblCuenta.getModel();
@@ -367,14 +381,17 @@ public class Main extends javax.swing.JFrame {
                     float retiros = 0;
                     float saldoFinal = 0;
                 
+                // Deserializa el contenido del archivo en un objeto Account.
                 cuenta = new Account().deserializar(contenido);
                 
+                // Obtiene el mes seleccionado del ComboBox.
                 mes = cboMes.getSelectedItem().toString();
                 
+                // Obtiene movimientos y saldo inicial.
                 List<Transactions> mov = operacion.obtenerMovimientos(mes, cuenta.getTransactions()/*, cuenta.getAuxiliar03()*/);
                 float saldoAnterior = operacion.obtenerSaldoInicial(mes, cuenta.getTransactions());
                 
-                
+                 // Actualiza campos de la interfaz con información del archivo.
                 txtArchivo.setText(archivo.toString());
                 txtNombre.setText(cuenta.getCustomer().getName());
                  modelo.addRow(new Object[] {"RFC: " + cuenta.getCustomer().getRfc()});
@@ -387,6 +404,7 @@ public class Main extends javax.swing.JFrame {
                  modelo1.addRow(new Object[] {"CLABE", String.format("%16s", cuenta.getClabe())});
                  modelo1.addRow(new Object[] {"MONEDA", String.format("%32s", cuenta.getCurrency())});
                  
+                // Calcula y muestra información financiera en las tablas de la interfaz.
                   for(Transactions m : mov){
                 
                      depositos += m.getDeposito();
@@ -394,6 +412,10 @@ public class Main extends javax.swing.JFrame {
                      saldoFinal = m.getSubtotal();
                 
                 }
+                  
+                 // ... (actualiza modelos de tablas y campos de la interfaz) ...
+            
+                 // Muestra el saldo final en un campo de la interfaz.
                  
                  modelo2.addRow(new Object[] {"Saldo inicial (anterior)", String.format("$%,34.2f", saldoAnterior)});
                  modelo2.addRow(new Object[] {"Depósitos", String.format("$%,34.2f", depositos)});
@@ -422,12 +444,13 @@ public class Main extends javax.swing.JFrame {
                 
             }
             
-        }catch(NullPointerException e){
             
+        }catch(NullPointerException e){
+          // Muestra un mensaje de error si ocurre una NullPointerException.  
             JOptionPane.showMessageDialog(null, "Tienes que cargar un archivo json, o un archivo json con el formato adecuado", "ERROR", JOptionPane.ERROR_MESSAGE);
             
         }catch(Exception ex){
-            
+          // Muestra un mensaje de error si ocurre una excepción.  
             JOptionPane.showMessageDialog(null,"Ocurrió un error: " + ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
             
         }
